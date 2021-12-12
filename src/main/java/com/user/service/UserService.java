@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.user.cache.RedisRepository;
 import com.user.controller.Controller;
 import com.user.data.DataAccessObject;
+import com.user.utils.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class UserService {
 				response = new JSONObject();
 				if(hours == null) response.put("trends", dao.getTrends(day));
 				else response.put("trends", dao.getTrends(day,hours));
-				jedis.set("trends",response.toString());
+				jedis.set(Utils.getRedisKeyForTrend("trends", day, hours),response.toString());
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
@@ -59,7 +60,7 @@ public class UserService {
 				response = new JSONObject();
 				if(hours == null) response.put("trendSentiment", dao.getTrendSentiment(day,trend));
 				else response.put("trendSentiment", dao.getTrendSentiment(hours,day,trend));
-				jedis.set("trendSentiment",response.toString());
+				jedis.set(Utils.getRedisKeyForTrendSentiment("trendSentiment", day, trend, hours),response.toString());
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
@@ -81,7 +82,7 @@ public class UserService {
 				response = new JSONObject();
 				if(hours == null) response.put("activeCountries", dao.getHighActivityCountries(day));
 				else response.put("activeCountries", dao.getHighActivityCountries(day,hours));
-				jedis.set("activeCountries",response.toString());
+				jedis.set(Utils.getRedisKeyForTrendOrCountries("activeCountries", day, hours),response.toString());
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
