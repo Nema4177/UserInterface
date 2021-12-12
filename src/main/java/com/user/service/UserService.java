@@ -21,19 +21,21 @@ public class UserService {
 	@Autowired
 	RedisRepository redisRepository;
 	
-	public JSONObject getTrends() {
+	public JSONObject getTrends(int day,Integer hours) {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
 			if(jedis.get("trends") == null) {
 				response = new JSONObject();
-				response.put("trends", dao.getTrends());
+				if(hours == null) response.put("trends", dao.getTrends(day));
+				else response.put("trends", dao.getTrends(day,hours));
 				jedis.set("trends",response.toString());
 			}else {
 				System.out.println("Retrieving from cache");
 				JSONParser parser = new JSONParser();
 				response = (JSONObject) parser.parse(jedis.get("trends"));
 			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -41,13 +43,14 @@ public class UserService {
 		return response;
 	}
 	
-	public JSONObject getTrendSentiment() {
+	public JSONObject getTrendSentiment(int day, String trend,Integer hours) {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
 			if(jedis.get("trendSentiment") == null) {
 				response = new JSONObject();
-				response.put("trendSentiment", dao.getTrendSentiment());
+				if(hours == null) response.put("trendSentiment", dao.getTrendSentiment(day,trend));
+				else response.put("trendSentiment", dao.getTrendSentiment(hours,day,trend));
 				jedis.set("trendSentiment",response.toString());
 			}else {
 				System.out.println("Retrieving from cache");
@@ -61,13 +64,14 @@ public class UserService {
 		return response;
 	}
 
-	public JSONObject getActiveCountries() {
+	public JSONObject getActiveCountries(int day,Integer hours) {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
 			if(jedis.get("activeCountries") == null) {
 				response = new JSONObject();
-				response.put("activeCountries", dao.getHighActivityCountries());
+				if(hours == null) response.put("activeCountries", dao.getHighActivityCountries(day));
+				else response.put("activeCountries", dao.getHighActivityCountries(day,hours));
 				jedis.set("activeCountries",response.toString());
 			}else {
 				System.out.println("Retrieving from cache");
@@ -79,6 +83,11 @@ public class UserService {
 		}
 		
 		return response;
+	}
+
+	public void clearCache() {
+		Jedis jedis = redisRepository.getJedis();
+		jedis.flushAll();
 	}
 
 }

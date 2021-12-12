@@ -37,4 +37,14 @@ public class Utils {
 		activity_object.put("countries",countries);
 		return activity_object;
 	}
+	
+	public static String getRedisKeyForTrendOrCountrues(String trendsKey,int day, Integer hours) {
+		if(hours == null) return trendsKey+"-"+day;
+		else return trendsKey+"-"+day+"-"+hours;
+	}
+	
+	public static String getRedisKeyForTrend(String trendSentimentKey,int day,String trend,Integer hours) {
+		if(hours == null) return trendSentimentKey+"-"+day+"-"+trend;
+		else return trendSentimentKey+"-"+day+"-"+trend+"-"+hours;
+	}
 }

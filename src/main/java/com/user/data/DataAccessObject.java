@@ -38,10 +38,10 @@ public class DataAccessObject {
 		}
 	}
 	
-	public List<JSONObject> getTrends() {
+	public List<JSONObject> getTrends(int day) {
 		
 		List<JSONObject> trends = new LinkedList<>();
-		ResultSet resultSet = session.execute("select * from trends");
+		ResultSet resultSet = session.execute("select * from trends where day="+day+" ALLOW FILTERING");
 		
 		for(Row rs: resultSet) {
 			trends.add(Utils.getTrend(rs.getString(4), rs.getInt(5)));
@@ -50,10 +50,34 @@ public class DataAccessObject {
 		return trends;
 	}
 	
-	public List<JSONObject> getTrendSentiment() {
+	public List<JSONObject> getTrends(int day,int hours) {
+		
+		List<JSONObject> trends = new LinkedList<>();
+		ResultSet resultSet = session.execute("select * from trends where day="+day+" AND hours="+hours+" ALLOW FILTERING");
+		
+		for(Row rs: resultSet) {
+			trends.add(Utils.getTrend(rs.getString(4), rs.getInt(5)));
+			System.out.println(rs);
+		}
+		return trends;
+	}
+	
+	public List<JSONObject> getTrendSentiment(int day,String trend) {
 		
 		List<JSONObject> trendSentiment = new LinkedList<>();
-		ResultSet resultSet = session.execute("select * from tweet_sentiment");
+		ResultSet resultSet = session.execute("select * from tweet_sentiment where day="+day+" AND trend='"+trend+"' ALLOW FILTERING");
+		
+		for(Row rs: resultSet) {
+			trendSentiment.add(Utils.getTrendSentiment(rs.getString(4), rs.getString(5), rs.getString(6)));
+			System.out.println(rs);
+		}
+		return trendSentiment;
+	}
+	
+	public List<JSONObject> getTrendSentiment(int hours, int day,String trend) {
+		
+		List<JSONObject> trendSentiment = new LinkedList<>();
+		ResultSet resultSet = session.execute("select * from tweet_sentiment where day="+day+" AND trend='"+trend+" AND hours="+hours+"' ALLOW FILTERING");
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getTrendSentiment(rs.getString(4), rs.getString(5), rs.getString(6)));
@@ -62,9 +86,20 @@ public class DataAccessObject {
 		return trendSentiment;
 	}
 
-	public List<JSONObject> getHighActivityCountries() {
+	public List<JSONObject> getHighActivityCountries(int day) {
 		List<JSONObject> trendSentiment = new LinkedList<>();
-		ResultSet resultSet = session.execute("select * from trend_activity_regions");
+		ResultSet resultSet = session.execute("select * from trend_activity_regions where day="+day+" ALLOW FILTERING");
+		
+		for(Row rs: resultSet) {
+			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
+			System.out.println(rs);
+		}
+		return trendSentiment;
+	}
+	
+	public List<JSONObject> getHighActivityCountries(int day,int hours) {
+		List<JSONObject> trendSentiment = new LinkedList<>();
+		ResultSet resultSet = session.execute("select * from trend_activity_regions where day="+day+" AND hours="+hours+" ALLOW FILTERING");
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
