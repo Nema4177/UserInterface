@@ -51,6 +51,15 @@ public class Controller {
 	public ResponseEntity<JSONObject> getActiveCountries(@RequestParam int day,@RequestParam(required = false) Integer hours) {
 	    return new ResponseEntity<>(userService.getActiveCountries(day,hours), HttpStatus.OK);
 	}
+
+	@GetMapping(path = "/getDailyReport", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<JSONObject> getDailyReport() {
+		//TODO: get user input for the date of the report
+		JSONObject response = new JSONObject();
+		response.put("reportURL", userService.getDailyReport());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 
 }

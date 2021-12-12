@@ -1,9 +1,12 @@
 package com.user.data;
 
+import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.net.URL;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 import org.springframework.stereotype.Component;
 
 import com.datastax.driver.core.Cluster;
@@ -11,6 +14,17 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.user.utils.Utils;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import software.amazon.awssdk.services.s3.S3Utilities;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
 
 @Component
 public class DataAccessObject {
@@ -107,6 +121,55 @@ public class DataAccessObject {
 		}
 		return trendSentiment;
 	}
+
+	private JSONObject getCredentialsJSON(){
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = null;
+		try
+		{
+			Object obj = parser.parse(new FileReader("src/main/resources/credentials.json"));
+			jsonObject = (JSONObject) obj;
+			String access_key = (String) jsonObject.get("AWS_ACCESS_KEY");
+			String secret_key = (String) jsonObject.get("AWS_SECRET_KEY");
+			//JSONArray testbucketnikhith = (JSONArray)jsonObject.get("Subjects");
+			System.out.println("creds: " + jsonObject.toJSONString());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return  jsonObject;
+	}
+
+	public String getDailyReport() {
+//		List<JSONObject> trendSentiment = new LinkedList<>();
+//		ResultSet resultSet = session.execute("select * from trend_activity_regions");
+//
+//		for(Row rs: resultSet) {
+//			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
+//			System.out.println(rs);
+//		}
+//		return trendSentiment;
+		JSONObject credsJSON = getCredentialsJSON();
+		AWSCredentials creds = new BasicAWSCredentials(
+				(String) credsJSON.get("AWS_ACCESS_KEY"),
+				(String) credsJSON.get("AWS_SECRET_KEY")
+		);
+
+		String BUCKET_NAME = (String)credsJSON.get("BUCKET_NAME");
+		AmazonS3 s3client = AmazonS3ClientBuilder
+				.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(creds))
+				.withRegion(Regions.US_EAST_2)
+				.build();
+		URL s3Url = s3client.getUrl(BUCKET_NAME, "report2.pdf");
+		System.out.println("url: "+s3Url);
+		System.out.println("String URL: "+s3Url.toString());
+//		S3Utilities utilities = S3Utilities.builder().region(Regions.US_WEST_2).build();
+//		GetUrlRequest request = GetUrlRequest.builder().bucket("foo-bucket").key("key-without-spaces").build();
+//		URL url = utilities.getUrl(request);
+		return s3Url.toString();
+	}
+
 
 
 }

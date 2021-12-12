@@ -85,6 +85,10 @@ public class UserService {
 		return response;
 	}
 
+	public String getDailyReport() {
+		return dao.getDailyReport();
+	}
+
 	public void clearCache() {
 		Jedis jedis = redisRepository.getJedis();
 		jedis.flushAll();
