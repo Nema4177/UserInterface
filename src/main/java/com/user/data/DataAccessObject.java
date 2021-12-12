@@ -136,8 +136,6 @@ public class DataAccessObject {
 			jsonObject = (JSONObject) obj;
 			String access_key = (String) jsonObject.get("AWS_ACCESS_KEY");
 			String secret_key = (String) jsonObject.get("AWS_SECRET_KEY");
-			//JSONArray testbucketnikhith = (JSONArray)jsonObject.get("Subjects");
-			System.out.println("creds: " + jsonObject.toJSONString());
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -145,15 +143,8 @@ public class DataAccessObject {
 		return  jsonObject;
 	}
 
-	public String getDailyReport() {
-//		List<JSONObject> trendSentiment = new LinkedList<>();
-//		ResultSet resultSet = session.execute("select * from trend_activity_regions");
-//
-//		for(Row rs: resultSet) {
-//			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
-//			System.out.println(rs);
-//		}
-//		return trendSentiment;
+	public String getDailyReport(int day, int month) {
+
 		JSONObject credsJSON = getCredentialsJSON();
 		AWSCredentials creds = new BasicAWSCredentials(
 				(String) credsJSON.get("AWS_ACCESS_KEY"),
@@ -166,13 +157,17 @@ public class DataAccessObject {
 				.withCredentials(new AWSStaticCredentialsProvider(creds))
 				.withRegion(Regions.US_EAST_2)
 				.build();
-		URL s3Url = s3client.getUrl(BUCKET_NAME, "report2.pdf");
-		System.out.println("url: "+s3Url);
-		System.out.println("String URL: "+s3Url.toString());
+
+		String reportName = "report_"+month+"-"+day + ".pdf";
+
+		URL s3Url = s3client.getUrl(BUCKET_NAME, reportName);
+		//System.out.println("url: "+s3Url);
+		String msg = "Access your daily report here: "+s3Url.toString();
+		System.out.println(msg);
 //		S3Utilities utilities = S3Utilities.builder().region(Regions.US_WEST_2).build();
 //		GetUrlRequest request = GetUrlRequest.builder().bucket("foo-bucket").key("key-without-spaces").build();
 //		URL url = utilities.getUrl(request);
-		return s3Url.toString();
+		return msg;
 	}
 
 
