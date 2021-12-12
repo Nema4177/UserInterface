@@ -10,11 +10,17 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.user.controller.Controller;
 import com.user.utils.Utils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class DataAccessObject {
 	
+    private static Logger logger = LoggerFactory.getLogger(DataAccessObject.class);
+
 	Session session;
 	
 	DataAccessObject() {
@@ -45,7 +51,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trends.add(Utils.getTrend(rs.getString(4), rs.getInt(5)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trends;
 	}
@@ -57,7 +63,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trends.add(Utils.getTrend(rs.getString(4), rs.getInt(5)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trends;
 	}
@@ -69,7 +75,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getTrendSentiment(rs.getString(4), rs.getString(5), rs.getString(6)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trendSentiment;
 	}
@@ -81,7 +87,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getTrendSentiment(rs.getString(4), rs.getString(5), rs.getString(6)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trendSentiment;
 	}
@@ -92,7 +98,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trendSentiment;
 	}
@@ -103,7 +109,7 @@ public class DataAccessObject {
 		
 		for(Row rs: resultSet) {
 			trendSentiment.add(Utils.getHighActivityCountry(rs.getString(4), rs.getString(5)));
-			System.out.println(rs);
+			logger.info(rs.toString());
 		}
 		return trendSentiment;
 	}
