@@ -27,28 +27,21 @@ public class Controller {
 	@GetMapping(path = "/trends", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<JSONObject> getTrends() {
-		JSONObject response = new JSONObject();
-		response.put("trends", userService.getTrends());
-	    return new ResponseEntity<>(response, HttpStatus.OK);
+	    return new ResponseEntity<>(userService.getTrends(), HttpStatus.OK);
 
 	}
 	
 	@GetMapping(path = "/trendSentiment", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<JSONObject> getSentiment() {
-		JSONObject response = new JSONObject();
-		response.put("trendSentiment", userService.getTrendSentiment());
-	    return new ResponseEntity<>(response, HttpStatus.OK);
+	    return new ResponseEntity<>(userService.getTrendSentiment(), HttpStatus.OK);
 
 	}
 	
 	@GetMapping(path = "/highActiveCountries", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<JSONObject> getActiveCountries() {
-		JSONObject response = new JSONObject();
-		response.put("activeCountries", userService.getActiveCountries());
-	    return new ResponseEntity<>(response, HttpStatus.OK);
-
+	    return new ResponseEntity<>(userService.getActiveCountries(), HttpStatus.OK);
 	}
 	
 
