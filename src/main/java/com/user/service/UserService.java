@@ -94,8 +94,8 @@ public class UserService {
 		return response;
 	}
 
-	public String getDailyReport() {
-		return dao.getDailyReport();
+	public String getDailyReport(int day, int month) {
+		return dao.getDailyReport(day, month);
 	}
 
 	public void clearCache() {

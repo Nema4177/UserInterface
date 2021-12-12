@@ -61,10 +61,10 @@ public class Controller {
 
 	@GetMapping(path = "/getDailyReport", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<JSONObject> getDailyReport() {
+	public ResponseEntity<JSONObject> getDailyReport(@RequestParam int day, @RequestParam int month) {
 		//TODO: get user input for the date of the report
 		JSONObject response = new JSONObject();
-		response.put("reportURL", userService.getDailyReport());
+		response.put("reportURL", userService.getDailyReport(day, month));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
