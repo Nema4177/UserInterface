@@ -41,8 +41,8 @@ public class DataAccessObject {
 		Cluster cluster = Cluster.builder()
 				.withoutJMXReporting()
 		        .withClusterName("myCluster")
-		        .addContactPoint("127.0.0.1")
-		        //.addContactPoint("35.224.198.193")
+		        //.addContactPoint("127.0.0.1")
+		        .addContactPoint("35.224.198.193")
 		        .build();
 		Session session = cluster.connect("tweet_analytics");
 		this.session = session;
