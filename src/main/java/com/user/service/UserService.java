@@ -32,7 +32,7 @@ public class UserService {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
-			if(jedis.get("trends") == null) {
+			if(jedis.get(Utils.getRedisKeyForTrend("trends", day, hours)) == null) {
 				logger.info("Retrieving from DB");
 				response = new JSONObject();
 				if(hours == null) response.put("trends", dao.getTrends(day));
@@ -41,7 +41,7 @@ public class UserService {
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
-				response = (JSONObject) parser.parse(jedis.get("trends"));
+				response = (JSONObject) parser.parse(jedis.get(Utils.getRedisKeyForTrend("trends", day, hours)));
 			}
 			
 		}catch(Exception e) {
@@ -55,7 +55,7 @@ public class UserService {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
-			if(jedis.get("trendSentiment") == null) {
+			if(jedis.get(Utils.getRedisKeyForTrendSentiment("trendSentiment", day, trend, hours)) == null) {
 				logger.info("Retrieving from DB");
 				response = new JSONObject();
 				if(hours == null) response.put("trendSentiment", dao.getTrendSentiment(day,trend));
@@ -64,7 +64,7 @@ public class UserService {
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
-				response = (JSONObject) parser.parse(jedis.get("trendSentiment"));
+				response = (JSONObject) parser.parse(jedis.get(Utils.getRedisKeyForTrendSentiment("trendSentiment", day, trend, hours)));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -77,7 +77,7 @@ public class UserService {
 		Jedis jedis = redisRepository.getJedis();
 		JSONObject response=null;
 		try {
-			if(jedis.get("activeCountries") == null) {
+			if(jedis.get(Utils.getRedisKeyForTrendOrCountries("activeCountries", day, hours)) == null) {
 				logger.info("Retrieving from DB");
 				response = new JSONObject();
 				if(hours == null) response.put("activeCountries", dao.getHighActivityCountries(day));
@@ -86,7 +86,7 @@ public class UserService {
 			}else {
 				logger.info("Retrieving from cache");
 				JSONParser parser = new JSONParser();
-				response = (JSONObject) parser.parse(jedis.get("activeCountries"));
+				response = (JSONObject) parser.parse(jedis.get(Utils.getRedisKeyForTrendOrCountries("activeCountries", day, hours)));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
